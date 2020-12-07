@@ -4,5 +4,16 @@
 </p>
 
 
-I think you should use an
-`<addr>` element here instead.
+## Codes:
+Master codes to controll slaves:
+
+```
+$ turn_left
+$ turn_right
+$ turn_default
+$ check_motors_front
+$ check_motors_back
+$ control
+$ stop
+
+```
