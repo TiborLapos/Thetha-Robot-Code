@@ -126,7 +126,6 @@ void setup() {
   for (int i = 5; i < 9; i++) {
     digitalWrite(i, LOW);
   }
-  delay(1000);
 
   MotorActiveStatus1('R', true);
   MotorActiveStatus1('L', true);
@@ -284,6 +283,7 @@ void motors_status() {
 
 
 void motor_check(String values) {
+
   Serial.println("Checking motors");
   Serial.println(values);
   Serial.println();
@@ -319,25 +319,13 @@ void motor_check(String values) {
   int number_back2 = back_values2.toInt();
   Serial.print("Back Right value: ");        
   Serial.println(number_back2); 
- Serial.println();
+  Serial.println();
 
+  if (way == 1){motor_go_front(number_front1,number_front2);}
+  if (way == -1){motor_go_back(number_front1,number_front2);}
+  if (way == 0){motor_go_stop();}
 
-
-  if (way == 1){
-    motor_go_front(number_front1,number_front2);
-    }
-  if (way == -1){
-    motor_go_back(number_front1,number_front2);
-    }
     
-
-  
-
-
-  
-
-
- 
 }
 
 
