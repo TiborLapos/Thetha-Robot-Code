@@ -201,30 +201,16 @@ void commands(String cmd) { //RUN Recived code
 
 //MOTORS FRONT
 
-void motor_go_front(int i) {
+void motor_go_front(int F_L, int F_R) {
   Serial.println("FRONT");
-  setMotor1('L', i);
-  setMotor2('L', i);
+  setMotor1('L', F_L);
+  setMotor2('L', F_R);
 }
 
-void motor_go_right(int i) {
-  Serial.print("Turning right speed:  ");
-  Serial.println(i);
-  setMotor1('L', i);
-  setMotor2('L', i);
-}
-
-void motor_go_back(int i) {
+void motor_go_back(int B_L, int B_R) {
   Serial.println("BACK");
-  setMotor1('R', i);
-  setMotor2('R', i);
-}
-
-void motor_go_left(int i) {
-  Serial.print("Turning left speed: ");
-  Serial.println(i);
-  setMotor1('R', i);
-  setMotor2('R', i);
+  setMotor1('R', B_L);
+  setMotor2('R', B_R);
 }
 
 void motor_go_stop() {
@@ -234,6 +220,24 @@ void motor_go_stop() {
   closeMotor1('L');
   closeMotor2('L');
 }
+
+
+
+void motor_go_left(int i) {
+  Serial.print("Turning left speed: ");
+  Serial.println(i);
+  setMotor1('R', i);
+  setMotor2('R', i);
+}
+
+void motor_go_right(int i) {
+  Serial.print("Turning right speed:  ");
+  Serial.println(i);
+  setMotor1('L', i);
+  setMotor2('L', i);
+}
+
+
 
 
 //STEPPER MOTORS FRONT
@@ -316,6 +320,24 @@ void motor_check(String values) {
   Serial.print("Back Right value: ");        
   Serial.println(number_back2); 
  Serial.println();
+
+
+
+  if (way == 1){
+    motor_go_front(number_front1,number_front2);
+    }
+  if (way == -1){
+    motor_go_back(number_front1,number_front2);
+    }
+    
+
+  
+
+
+  
+
+
+ 
 }
 
 
