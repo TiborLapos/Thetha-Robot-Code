@@ -4,8 +4,8 @@
 </p>
 
 
-## Codes :
-Codes to controll the robot [motors/servos]:
+## Code :
+Code to controll the robot [motors/servos]:
 
 ```
 $ turn_left
