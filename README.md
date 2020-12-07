@@ -4,7 +4,7 @@
 </p>
 
 
-## Code :
+## Code:
 Code to controll the robot [motors/servos]:
 
 ```
