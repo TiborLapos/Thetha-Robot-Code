@@ -4,8 +4,8 @@
 </p>
 
 
-## Codes:
-Master codes to controll slaves:
+## Codes :
+Codes to controll the robot [motors/servos]:
 
 ```
 $ turn_left
@@ -15,5 +15,4 @@ $ check_motors_front
 $ check_motors_back
 $ control
 $ stop
-
 ```
