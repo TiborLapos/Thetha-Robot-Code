@@ -68,9 +68,12 @@ void loop() {
  delay(1000);
 }
 
+
+
+
+
 void control_moovment(){
     String str;
-
     while (true){
     if(Serial.available() > 0){
           str = Serial.readStringUntil('\n');         
@@ -86,34 +89,57 @@ void control_moovment(){
       Serial.print(xValue);
       Serial.print("\t");
       Serial.println(yValue);
-     }else {
+
+      if (xValue >= 1000){
+        go_front();
+        }
+     if (xValue <= 10){
+      go_back();
+      
+      }
+     }else{
       break;
       }
-    }
+  }
 }
-void l{
+
+
+  
+
+
+
+  
+void go_front(){
   Wire.beginTransmission(9); 
   Wire.write("motor_go");  
   Wire.endTransmission();  
   Wire.beginTransmission(8); 
   Wire.write("motor_go");  
   Wire.endTransmission(); 
-  }
+  going_speed(1,35,35,35,35);
+}
+
+void go_back(){
+  Wire.beginTransmission(9); 
+  Wire.write("motor_go");  
+  Wire.endTransmission();  
+  Wire.beginTransmission(8); 
+  Wire.write("motor_go");  
+  Wire.endTransmission(); 
+  going_speed(-1,35,35,35,35);
+}
 
 
-  
-void going_speed(int fl, int fr, int bl, int br){  
-  char buffer[10];
-  sprintf(buffer,"%04d%04d%04d%04d%", fl,fr,bl,br);
+void going_speed(int stat, int fl, int fr, int bl, int br){  
+  char buffer[15];
+  sprintf(buffer,"%02d%04d%04d%04d%4d",stat, fl,fr,bl,br);
   Wire.beginTransmission(9); 
   Wire.write(buffer);  
   Wire.endTransmission();
   Wire.beginTransmission(8); 
   Wire.write(buffer);  
   Wire.endTransmission();   
-  Serial.println(buffer);
   }
-
   
 void turn_default(){
    Wire.beginTransmission(9); /* begin with device address 9 */
@@ -181,21 +207,20 @@ void turn_right(){
 void check_motors_back_0X08(){
   Serial.println("-------MOTOR BACK------");
   String motor_values = "";
-   Wire.beginTransmission(8); /* begin with device address 8 */
-   Wire.write("motor_status");  /* sends hello string */
-   Wire.endTransmission();    /* stop transmitting */
+  Wire.beginTransmission(8); /* begin with device address 8 */
+  Wire.write("motor_status");  /* sends hello string */
+  Wire.endTransmission();    /* stop transmitting */
    
-   Wire.requestFrom(8, 16);    // request 6 bytes from slave device #8
+  Wire.requestFrom(8, 16);    // request 6 bytes from slave device #8
 
-    while (Wire.available()) { // slave may send less than requested
-      char c = Wire.read(); // receive a byte as character
+  while (Wire.available()) { // slave may send less than requested
+    char c = Wire.read(); // receive a byte as character
 
-      motor_values = motor_values + c;
-      Serial.print(c);         // print the character
-    }
+    motor_values = motor_values + c;
+    Serial.print(c);         // print the character
+  }
 
-  Serial.println();
-
+ 
   Serial.println();
   Serial.print("Values in STRING: ");         // print the character
   Serial.println(motor_values); 
