@@ -106,7 +106,7 @@ void setup() {
   Wire.begin(8);                /* join i2c bus with address 9 */
   Wire.onReceive(receiveString); /* register receive event  */
   Serial.begin(9600);           /* start serial comm. */
-  Serial.println("BACK | I am I2C Slave 0X08");
+  Serial.println("FRONT | I am I2C Slave 0X08");
   Wire.setClock(3400000); //Fast comunication
 
   // LED

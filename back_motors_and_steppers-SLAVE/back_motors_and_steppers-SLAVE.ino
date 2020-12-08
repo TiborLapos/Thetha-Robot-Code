@@ -103,7 +103,7 @@ void closeMotor2(char side) {
 
 void setup() {
   setPWMfrequency(0x02);// timer 2 , 3.92KHz
-  Wire.begin(8);                /* join i2c bus with address 9 */
+  Wire.begin(9);                /* join i2c bus with address 9 */
   Wire.onReceive(receiveString); /* register receive event  */
   Serial.begin(9600);           /* start serial comm. */
   Serial.println("BACK | I am I2C Slave 0X08");
