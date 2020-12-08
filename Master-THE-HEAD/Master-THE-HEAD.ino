@@ -1,3 +1,5 @@
+//developing brench
+
 #include   <Wire.h>
 
 #define joyX A0
@@ -5,7 +7,7 @@
 
 
 
-##test developing brench
+
 
 
 String str;
