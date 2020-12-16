@@ -108,7 +108,7 @@ void go_stop() {
 }
 
 void go_front() {
-  going_speed(1, 38, 38, 38, 38);
+  going_speed(1, 38, 38,38,38);
 }
 
 void go_back() {

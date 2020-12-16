@@ -200,14 +200,14 @@ void commands(String cmd) { //RUN Recived code
 
 void motor_go_front(int F_L, int F_R) {
   Serial.println("FRONT");
-  setMotor1('L', F_L);
-  setMotor2('R', F_R);
+  setMotor1('R', F_L);
+  setMotor2('L', F_R);
 }
 
 void motor_go_back(int B_L, int B_R) {
   Serial.println("BACK");
-  setMotor1('R', B_L);
-  setMotor2('L', B_R);
+  setMotor1('L', B_L);
+  setMotor2('R', B_R);
 }
 
 void motor_go_stop() {

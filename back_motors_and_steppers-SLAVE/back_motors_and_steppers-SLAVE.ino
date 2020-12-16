@@ -352,8 +352,8 @@ void front_turn_default() {
     //Steper -- Turning LEFT
     int a = right_stepper_position / SPR;
     Serial.println(a);
-    digitalWrite(DirPin1, HIGH);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, HIGH);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin1, LOW);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin2, LOW);   // <-- MOTOR POSITION TURNING
     motor_go_left(35);
     for (a > 0; a--;) {
       for ( x = 0; x <=  SPR; x++) {
@@ -376,8 +376,8 @@ void front_turn_default() {
     //Steper -- Turning RIGHT
     int a = right_stepper_position / SPR;
     Serial.println(a);
-    digitalWrite(DirPin1, LOW);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, LOW);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin1, HIGH);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin2, HIGH);   // <-- MOTOR POSITION TURNING
     motor_go_right(35);
     for (a < 0; a++;) {
       for ( x = 0; x <=  SPR; x++) {
@@ -409,8 +409,8 @@ void front_turn_right() {
   if (right_stepper_position < 250 || right_position_degree < 90 && left_stepper_position < 250 || left_position_degree < 90) {
     //Steper -- Turning RIGH
     turn_on();
-    digitalWrite(DirPin1, LOW);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, LOW);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin1, HIGH);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin2, HIGH);   // <-- MOTOR POSITION TURNING
     motor_go_right(35);
     for ( x = 0; x <=  SPR; x++) {
       Serial.print(a);
@@ -443,8 +443,8 @@ void front_turn_left() {
   if (right_stepper_position > -250 || right_position_degree > -90 && left_stepper_position > -250 || left_position_degree > -90) {
     turn_on();
     //Steper -- Turning LEFT
-    digitalWrite(DirPin1, HIGH);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, HIGH);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin1, LOW);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin2, LOW);   // <-- MOTOR POSITION TURNING
     motor_go_left(35);
     for ( x = 0; x <=  SPR; x++) {
       Serial.print(a);
