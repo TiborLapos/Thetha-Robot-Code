@@ -106,7 +106,7 @@ void setup() {
   Wire.begin(9);                /* join i2c bus with address 9 */
   Wire.onReceive(receiveString); /* register receive event  */
   Serial.begin(9600);           /* start serial comm. */
-  Serial.println("BACK | I am I2C Slave 0X08");
+  Serial.println("BACK | I am I2C Slave 0X09");
   Wire.setClock(3400000); //Fast comunication
 
   // LED
@@ -204,13 +204,13 @@ void commands(String cmd) { //RUN Recived code
 void motor_go_front(int F_L, int F_R) {
   Serial.println("FRONT");
   setMotor1('L', F_L);
-  setMotor2('L', F_R);
+  setMotor2('R', F_R);
 }
 
 void motor_go_back(int B_L, int B_R) {
   Serial.println("BACK");
   setMotor1('R', B_L);
-  setMotor2('R', B_R);
+  setMotor2('L', B_R);
 }
 
 void motor_go_stop() {
@@ -319,25 +319,13 @@ void motor_check(String values) {
   int number_back2 = back_values2.toInt();
   Serial.print("Back Right value: ");        
   Serial.println(number_back2); 
- Serial.println();
+  Serial.println();
+
+  if (way == 1){motor_go_front(number_front1,number_front2);}
+  if (way == -1){motor_go_back(number_front1,number_front2);}
+  if (way == 0){motor_go_stop();}
 
 
-
-  if (way == 1){
-    motor_go_front(number_front1,number_front2);
-    }
-  if (way == -1){
-    motor_go_back(number_front1,number_front2);
-    }
-    
-
-  
-
-
-  
-
-
- 
 }
 
 
