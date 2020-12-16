@@ -48,8 +48,6 @@ void loop() {
 
 void commands(String str) {
   if (str.length() > 0) {
-
-    
     if (str == "turn_left") {
       Serial.print("Dommand: " + text);
       Serial.println("Servo turn left ....");
@@ -70,12 +68,12 @@ void commands(String str) {
 
     if (str == "check_motors_front") {
       Serial.print("command: " + text);
-      check_motors_front_0X09();
+      check_motors_front_0X08();
     }
 
     if (str == "check_motors_back") {
       Serial.print("Command: " + text);
-      check_motors_back_0X08();
+      check_motors_back_0X09();
     }
     if (str == "control") {
      Serial.print("Command: " + text);
@@ -107,7 +105,6 @@ void controls(){
   if (xValue > 1000){go_front();} 
   if (xValue < 10){go_back();}
   if (xValue > 10 && xValue < 1000){go_stop();}
-  
   }
 
 void go_stop() {
@@ -147,8 +144,8 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
     Wire.beginTransmission(8); /* begin with device address 8 */
     Wire.write("front_turn_default");  /* sends hello string */
     Wire.endTransmission();    /* stop transmitting */
-    check_motors_front_0X09();
-    check_motors_back_0X08();
+    check_motors_front_0X08();
+    check_motors_back_0X09();
   }
 
 
@@ -159,8 +156,8 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
     Wire.beginTransmission(8); /* begin with device address 8 */
     Wire.write("front_turn_left");  /* sends hello string */
     Wire.endTransmission();    /* stop transmitting */
-    check_motors_front_0X09();
-    check_motors_back_0X08();
+    check_motors_front_0X08();
+    check_motors_back_0X09();
   }
 
 
@@ -172,8 +169,8 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
     Wire.beginTransmission(9); /* begin with device address 9 */
     Wire.write("front_turn_right");  /* sends hello string */
     Wire.endTransmission();    /* stop transmitting */
-    check_motors_front_0X09();
-    check_motors_back_0X08();
+    check_motors_front_0X08();
+    check_motors_back_0X09();
   }
 
 
@@ -203,14 +200,14 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
 
 
 
-  void check_motors_back_0X08() {
+  void check_motors_back_0X09() {
     Serial.println("-------MOTOR BACK------");
     String motor_values = "";
-    Wire.beginTransmission(8); /* begin with device address 8 */
+    Wire.beginTransmission(9); /* begin with device address 8 */
     Wire.write("motor_status");  /* sends hello string */
     Wire.endTransmission();    /* stop transmitting */
 
-    Wire.requestFrom(8, 16);    // request 6 bytes from slave device #8
+    Wire.requestFrom(9, 16);    // request 6 bytes from slave device #8
 
     while (Wire.available()) { // slave may send less than requested
       char c = Wire.read(); // receive a byte as character
@@ -268,14 +265,14 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
   }
 
 
-  void check_motors_front_0X09() {
+  void check_motors_front_0X08() {
     Serial.println("--------MOTOR FRONT-------");
     String motor_values = "";
-    Wire.beginTransmission(9); /* begin with device address 8 */
+    Wire.beginTransmission(8); /* begin with device address 8 */
     Wire.write("motor_status");  /* sends hello string */
     Wire.endTransmission();    /* stop transmitting */
 
-    Wire.requestFrom(9, 20);    // request 6 bytes from slave device #8
+    Wire.requestFrom(8, 20);    // request 6 bytes from slave device #8
 
     while (Wire.available()) { // slave may send less than requested
       char c = Wire.read(); // receive a byte as character
