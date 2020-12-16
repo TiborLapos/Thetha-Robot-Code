@@ -7,9 +7,6 @@
 
 
 
-
-
-
 String str;
 int num;
 bool controling = false;
@@ -19,12 +16,12 @@ String motor_values ;
 
 void setup() {
   num = num + 1;
-  Serial.begin(9600); /* begin serial comm. */
+  Serial.begin(115200); /* begin serial comm. */
   Wire.begin(); /* join i2c bus as master */
   Serial.println("I am I2C Master");
   Serial.println(num);
-
-  Wire.setClock(3400000);
+ // Wire.setClock(3400000);
+  
 }
 void check_for_command(){
   if (Serial.available() > 0) {
@@ -77,25 +74,25 @@ void commands(String str) {
     }
     if (str == "control") {
      Serial.print("Command: " + text);
+     Wire.beginTransmission(9);
+     Wire.write("motor_go");
+     Wire.endTransmission();
+     Wire.beginTransmission(8);
+     Wire.write("motor_go");
+     Wire.endTransmission();
      controling = true;
    
     }
     if (str == "stop") {
      Serial.print("Command " + text);
      controling = false;
- 
+     motor_stop();
     }
   }
 }
 
 
 void controls(){
-  Wire.beginTransmission(9);
-  Wire.write("motor_go");
-  Wire.endTransmission();
-  Wire.beginTransmission(8);
-  Wire.write("motor_go");
-  Wire.endTransmission();
   int xValue = analogRead(joyX); 
   int yValue = analogRead(joyY);
   Serial.print(xValue);
@@ -116,7 +113,16 @@ void go_front() {
 }
 
 void go_back() {
-  going_speed(-1, 100, 100, 100, 100);
+  going_speed(-1, 40, 40, 40, 40);
+}
+
+void motor_stop(){
+  Wire.beginTransmission(9);
+  Wire.write("motor_stop");
+  Wire.endTransmission();
+  Wire.beginTransmission(8);
+  Wire.write("motor_stop");
+  Wire.endTransmission();
 }
 
 
