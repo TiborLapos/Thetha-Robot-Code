@@ -150,20 +150,11 @@ void receiveString() { //Recive data from MASTER
 }
 
 void loop() {
-  if (go_go == true){
-      motor_check(values);
-    }
-  
+  if (go_go == true) {
+    motor_check(values);
+  }
+
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -255,50 +246,56 @@ void motors_status() {
 
 
 void motor_check(String values) {
-    Serial.print("Checking motors: ");
-    Serial.print(values);
-    Serial.println();
-    
-    Serial.print("Values in STRING: ");        
-    Serial.print(values); 
-    Serial.println();
-    
-    String status_way = values.substring(0,2);
-    int way = status_way.toInt();
-    Serial.print("What to do : ");        
-    Serial.print(way); 
-    Serial.println();
-    
-    String front_values1 = values.substring(2,6);
-    int number_front1 = front_values1.toInt();
-    Serial.print("Front Left value: ");        
-    Serial.print(number_front1); 
-    Serial.println();
-    
-    String front_values2 = values.substring(6,10);
-    int number_front2 = front_values2.toInt();
-    Serial.print("Front Right value: ");        
-    Serial.print(number_front2); 
-    Serial.println();
-    
-    String back_values1 = values.substring(10,14);
-    int number_back1 = back_values1.toInt();
-    Serial.print("Back Left value: ");        
-    Serial.print(number_back1); 
-    Serial.println();
-    
-    String back_values2 = values.substring(14,18);
-    int number_back2 = back_values2.toInt();
-    Serial.print("Back Right value: ");        
-    Serial.print(number_back2); 
-    Serial.println();
+  Serial.print("Checking motors: ");
+  Serial.print(values);
+  Serial.println();
 
-    
-    if (way == 1){motor_go_front(number_front1,number_front2);}
-    if (way == -1){motor_go_back(number_front1,number_front2);}
-    if (way == 0){motor_go_stop();}
-    Serial.println("-------------------------------------");
-   
+  Serial.print("Values in STRING: ");
+  Serial.print(values);
+  Serial.println();
+
+  String status_way = values.substring(0, 2);
+  int way = status_way.toInt();
+  Serial.print("What to do : ");
+  Serial.print(way);
+  Serial.println();
+
+  String front_values1 = values.substring(2, 6);
+  int number_front1 = front_values1.toInt();
+  Serial.print("Front Left value: ");
+  Serial.print(number_front1);
+  Serial.println();
+
+  String front_values2 = values.substring(6, 10);
+  int number_front2 = front_values2.toInt();
+  Serial.print("Front Right value: ");
+  Serial.print(number_front2);
+  Serial.println();
+
+  String back_values1 = values.substring(10, 14);
+  int number_back1 = back_values1.toInt();
+  Serial.print("Back Left value: ");
+  Serial.print(number_back1);
+  Serial.println();
+
+  String back_values2 = values.substring(14, 18);
+  int number_back2 = back_values2.toInt();
+  Serial.print("Back Right value: ");
+  Serial.print(number_back2);
+  Serial.println();
+
+
+  if (way == 1) {
+    motor_go_front(number_front1, number_front2);
+  }
+  if (way == -1) {
+    motor_go_back(number_front1, number_front2);
+  }
+  if (way == 0) {
+    motor_go_stop();
+  }
+  Serial.println("-------------------------------------");
+
 }
 
 
@@ -440,7 +437,6 @@ void front_turn_right() {
 }
 //    TURN THE ALL FRONT MOTOR TO LEFT
 void front_turn_left() {
-
   const int SPR = 50 ;    // Steps per revolution
   Serial.println("Tuning LEFT ....");
   if (right_stepper_position > -250 || right_position_degree > -90 && left_stepper_position > -250 || left_position_degree > -90) {

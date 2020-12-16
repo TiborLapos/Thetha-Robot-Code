@@ -33,7 +33,6 @@ void check_for_command(){
 
 void loop() {
   check_for_command();
-
   if (controling == true){
   controls();
   }
