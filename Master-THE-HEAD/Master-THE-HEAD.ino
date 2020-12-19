@@ -10,6 +10,8 @@
 //FRONT LEFT
 const int wheel_senzor_F_L = 7;
 int F_L_state;
+  int turns;
+
 //
 
 
@@ -19,6 +21,12 @@ int num;
 bool controling = false;
 String text;
 String motor_values ;
+
+
+
+
+unsigned int on_start, on_finished, on_elapsed;
+unsigned int off_start, off_finished, off_elapsed;
 
 
 void setup() {
@@ -39,15 +47,8 @@ void check_for_command(){
 
 
 void loop() {
-  F_L_state = digitalRead(wheel_senzor_F_L);
-  
-  if (F_L_state == HIGH){
-   Serial.println("ON");
-  }
-  else{
-   Serial.println("OFF");
-  }
 
+  motor_senzor_F_L();
 
 
   
@@ -58,6 +59,34 @@ void loop() {
 }
 
 
+
+void motor_senzor_F_L(){
+  F_L_state = digitalRead(wheel_senzor_F_L);
+
+  
+  if (F_L_state == LOW){
+   on_start= on_start  + 1;
+   off_start = 0;
+   Serial.println("ON");
+  }
+
+  
+  if (F_L_state == HIGH){
+    off_start=off_start + 1;
+    on_start = 0;
+    Serial.println("OFF");
+    }
+
+  if (on_start >= 15000){
+    Serial.println("STUCK");
+    }
+    
+  if (off_start >= 15000){
+    Serial.println("STUCK");
+    }
+
+    
+}
 
 
 
