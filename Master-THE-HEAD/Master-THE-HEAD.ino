@@ -8,7 +8,7 @@
 // WHEEL SENZORS FOR ROTATION CHECK
 
 //FRONT LEFT
-const int wheel_senzor_F_L = 5;
+const int wheel_senzor_F_L = 7;
 int F_L_state;
 //
 
