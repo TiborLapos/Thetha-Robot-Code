@@ -10,7 +10,9 @@
 //FRONT LEFT
 const int wheel_senzor_F_L = 7;
 int F_L_state;
-  int turns;
+bool counting1 = true;
+bool counting2 = true;
+
 
 //
 
@@ -21,7 +23,6 @@ int num;
 bool controling = false;
 String text;
 String motor_values ;
-
 
 
 
@@ -62,27 +63,37 @@ void loop() {
 
 void motor_senzor_F_L(){
   F_L_state = digitalRead(wheel_senzor_F_L);
-
-  
-  if (F_L_state == LOW){
+  Serial.print("1.: ");
+  Serial.println(on_start);
+  Serial.print("2.: ");
+  Serial.println(off_start);
+  if (F_L_state == LOW && counting1 == true){
    on_start= on_start  + 1;
    off_start = 0;
+   counting2 = true;
    Serial.println("ON");
   }
 
   
-  if (F_L_state == HIGH){
+  if (F_L_state == HIGH && counting2 == true){
     off_start=off_start + 1;
     on_start = 0;
+    counting1= true;
     Serial.println("OFF");
     }
 
   if (on_start >= 15000){
+    on_start = 0;
     Serial.println("STUCK");
+    counting1 = false;
+    counting2 = true;
     }
     
   if (off_start >= 15000){
+    off_start = 0;
     Serial.println("STUCK");
+    counting2 = false;
+    counting1 = true;
     }
 
     
