@@ -5,8 +5,15 @@
 #define joyX A0
 #define joyY A1
 
+// WHEEL SENZORS FOR ROTATION CHECK
+
+//FRONT LEFT
+const int wheel_senzor_F_L = 5;
+int F_L_state;
+//
 
 
+//
 String str;
 int num;
 bool controling = false;
@@ -15,9 +22,9 @@ String motor_values ;
 
 
 void setup() {
-  num = num + 1;
   Serial.begin(115200); /* begin serial comm. */
   Wire.begin(); /* join i2c bus as master */
+  pinMode(sensor, INPUT_PULLUP);
   Serial.println("I am I2C Master");
   Serial.println(num);
  // Wire.setClock(3400000);
@@ -32,6 +39,18 @@ void check_for_command(){
 
 
 void loop() {
+  state = digitalRead(sensor);
+  
+  if (state == HIGH){
+   Serial.println("ON");
+  }
+  else{
+   Serial.println("OFF");
+  }
+
+
+
+  
   check_for_command();
   if (controling == true){
   controls();
