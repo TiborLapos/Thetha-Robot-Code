@@ -6,15 +6,16 @@
 #define joyY A1
 
 // WHEEL SENZORS FOR ROTATION CHECK
+bool stuck = false;
+  //FRONT LEFT
+  const int wheel_senzor_F_L = 7;
+  int F_L_state;
+  bool counting1 = true;
+  bool counting2 = true;
+  bool on_of;
+  
+  //
 
-//FRONT LEFT
-const int wheel_senzor_F_L = 7;
-int F_L_state;
-bool counting1 = true;
-bool counting2 = true;
-
-
-//
 
 
 //
@@ -24,10 +25,7 @@ bool controling = false;
 String text;
 String motor_values ;
 
-
-
-unsigned int on_start, on_finished, on_elapsed;
-unsigned int off_start, off_finished, off_elapsed;
+  int count;
 
 
 void setup() {
@@ -49,12 +47,12 @@ void check_for_command(){
 
 void loop() {
 
-  motor_senzor_F_L();
 
 
   
   check_for_command();
   if (controling == true){
+  motor_senzor_F_L();
   controls();
   }
 }
@@ -63,40 +61,17 @@ void loop() {
 
 void motor_senzor_F_L(){
   F_L_state = digitalRead(wheel_senzor_F_L);
-  Serial.print("1.: ");
-  Serial.println(on_start);
-  Serial.print("2.: ");
-  Serial.println(off_start);
-  if (F_L_state == LOW && counting1 == true){
-   on_start= on_start  + 1;
-   off_start = 0;
-   counting2 = true;
-   Serial.println("ON");
-  }
+  
+  Serial.println(stuck ? "STUCK" : "GO");
+  Serial.println(on_of ? "1ON" : "1OFF");
+  Serial.println(count);
 
   
-  if (F_L_state == HIGH && counting2 == true){
-    off_start=off_start + 1;
-    on_start = 0;
-    counting1= true;
-    Serial.println("OFF");
+  if (F_L_state == HIGH ){
     }
-
-  if (on_start >= 15000){
-    on_start = 0;
-    Serial.println("STUCK");
-    counting1 = false;
-    counting2 = true;
+  
+  if ( F_L_state == LOW){ 
     }
-    
-  if (off_start >= 15000){
-    off_start = 0;
-    Serial.println("STUCK");
-    counting2 = false;
-    counting1 = true;
-    }
-
-    
 }
 
 
@@ -104,7 +79,7 @@ void motor_senzor_F_L(){
 void commands(String str) {
   if (str.length() > 0) {
     if (str == "turn_left") {
-      Serial.print("Dommand: " + text);
+      Serial.print("Command: " + text);
       Serial.println("Servo turn left ....");
       turn_left();
     }
@@ -155,12 +130,39 @@ void controls(){
   int yValue = analogRead(joyY);
   Serial.print(xValue);
   Serial.print("\t");        
-  Serial.println(yValue);       
-  
-  if (xValue > 1000){go_front();} 
-  if (xValue < 10){go_back();}
-  if (xValue > 10 && xValue < 1000){go_stop();}
+  Serial.println(yValue); 
+        
+if (stuck == true){
+  if (xValue < 10 && stuck != false){
+    go_back_stuck();
+    Serial.println("LETS GO FUCKER");
+    }
+  if (xValue > 1000 && stuck != false){
+    go_front_stuck();
+    Serial.println("LETS GO FUCKER");
   }
+ }
+ else {
+  if (xValue > 1000){
+    go_front();
+    Serial.println("NROMAL SPEED");
+    }
+    
+  if (xValue < 10){
+    go_back();
+    Serial.println("NROMAL SPEED");
+   }
+   
+  }
+  
+  if (xValue > 10 && xValue < 1000){
+    go_stop();
+    }
+  
+}
+
+
+
 
 void go_stop() {
   going_speed(0, 0, 0, 0, 0);
@@ -170,9 +172,22 @@ void go_front() {
   going_speed(1, 38, 38,38,38);
 }
 
+
+void go_front_stuck(){
+  for (int i; i < 100; i++)
+  going_speed(1, i, i,i,i);
+}
+
+
 void go_back() {
   going_speed(-1, 40, 40, 40, 40);
 }
+
+void go_back_stuck(){
+  for (int i; i < 100; i++)
+  going_speed(-1, i, i,i,i);
+}
+
 
 void motor_stop(){
   Wire.beginTransmission(9);
