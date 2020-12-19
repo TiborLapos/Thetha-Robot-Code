@@ -24,7 +24,7 @@ String motor_values ;
 void setup() {
   Serial.begin(115200); /* begin serial comm. */
   Wire.begin(); /* join i2c bus as master */
-  pinMode(sensor, INPUT_PULLUP);
+  pinMode(wheel_senzor_F_L, INPUT_PULLUP);
   Serial.println("I am I2C Master");
   Serial.println(num);
  // Wire.setClock(3400000);
@@ -39,9 +39,9 @@ void check_for_command(){
 
 
 void loop() {
-  state = digitalRead(sensor);
+  F_L_state = digitalRead(wheel_senzor_F_L);
   
-  if (state == HIGH){
+  if (F_L_state == HIGH){
    Serial.println("ON");
   }
   else{
