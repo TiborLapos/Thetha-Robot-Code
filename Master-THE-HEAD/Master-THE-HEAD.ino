@@ -70,14 +70,15 @@ void loop() {
 
 // Cehck if the Rover is stucked senzor
 void motro(){
- byte old_time; 
+  byte old_time; 
 
   if (seconds > 15){
-       Serial.println("--------- ADDING SPEED ---------");
+       stuck = true;
+       
       }
   if (seconds > 60){
-       Serial.println("-------- RESET -------");
-         seconds = 0;
+       seconds = 0;
+
       }
 
       
@@ -89,18 +90,21 @@ void motro(){
       Serial.println(done_circle);
       old_time = seconds;
       seconds = 0;
-     
     }
+    stuck = false;
+    
   }
    if (state == HIGH){
       i = 0;
-      Serial.println(done_circle);
+      
+      //Serial.println(done_circle);
     }
-
+  /*
     Serial.print("Old Time : ");
     Serial.println(old_time,DEC);
     Serial.print("New Time : ");
     Serial.println(seconds,DEC);
+    */
 }
 
 // CHECK FOR COMMAND 
@@ -160,17 +164,14 @@ void controls(){
   Serial.print("\t");        
   Serial.println(yValue); 
         
-if (stuck == true){
   if (xValue < 10 && stuck != false){
     go_back_stuck();
-    Serial.println("LETS GO FUCKER");
+    Serial.println("---- BOOSTED SPEED ---- ");
     }
   if (xValue > 1000 && stuck != false){
     go_front_stuck();
-    Serial.println("LETS GO FUCKER");
+    Serial.println("---- BOOSTED SPEED ---- ");
   }
- }
- else {
   if (xValue > 1000){
     go_front();
     Serial.println("NROMAL SPEED");
@@ -180,9 +181,6 @@ if (stuck == true){
     go_back();
     Serial.println("NROMAL SPEED");
    }
-   
-  }
-  
   if (xValue > 10 && xValue < 1000){
     go_stop();
     }
@@ -197,13 +195,15 @@ void go_stop() {
 }
 
 void go_front() {
-  going_speed(1, 38, 38,38,38);
+  going_speed(1, 40, 40, 40, 40);
+  
 }
 
 
 void go_front_stuck(){
-  for (int i; i < 100; i++)
-  going_speed(1, i, i,i,i);
+  for (int i = 0; i < 100; i++){
+     going_speed(1, i, i, i, i);
+    }
 }
 
 
@@ -212,8 +212,7 @@ void go_back() {
 }
 
 void go_back_stuck(){
-  for (int i; i < 100; i++)
-  going_speed(-1, i, i,i,i);
+ going_speed(-1, 100, 100, 100, 100);
 }
 
 
