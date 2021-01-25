@@ -1,15 +1,11 @@
-const int sensor = 4;
+const int sensor = 5;
 unsigned long previousTime = 0;
 byte seconds;
-
-
-
 int state; // 0 close - 1 open wwitch
-
-int korte;
-
-int alma;
+int done_circle;
 int i;
+
+
 
 unsigned long StartTime; 
 
@@ -25,18 +21,16 @@ void loop() {
           previousTime = previousTime + 100;  // use 100000 for uS
           seconds = seconds + 1;
       }
-
 }
 
-
 void motro(){
-  byte test; 
+ byte old_time; 
 
   if (seconds > 15){
-       Serial.println("__________________________________________________________add speed");
+       Serial.println("--------- ADDING SPEED ---------");
       }
   if (seconds > 60){
-       Serial.println("__________________________________________________________rest");
+       Serial.println("-------- RESET -------");
          seconds = 0;
       }
 
@@ -44,22 +38,22 @@ void motro(){
   state = digitalRead(sensor);
   if (state == LOW){
     if (i < 1){
-      alma = alma +1;
+      done_circle = done_circle +1;
       i =  + 1;
-      Serial.println(alma);
-      test = seconds;
+      Serial.println(done_circle);
+      old_time = seconds;
       seconds = 0;
      
     }
   }
    if (state == HIGH){
       i = 0;
-      Serial.println(alma);
+      Serial.println(done_circle);
     }
 
-    Serial.print("OLD: ");
-    Serial.println(test,DEC);
-    Serial.print("NEW: ");
+    Serial.print("Old Time : ");
+    Serial.println(old_time,DEC);
+    Serial.print("New Time : ");
     Serial.println(seconds,DEC);
 
 

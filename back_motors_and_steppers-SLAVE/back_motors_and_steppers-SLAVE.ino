@@ -244,8 +244,6 @@ void motors_status() {
   Wire.write(buffer);
 }
 
-
-
 void motor_check(String values) {
   Serial.print("Checking motors: ");
   Serial.print(values);
@@ -296,7 +294,6 @@ void motor_check(String values) {
     motor_go_stop();
   }
   Serial.println("-------------------------------------");
-
 }
 
 
@@ -317,8 +314,6 @@ void motors_posotions(int left_stepper, int right_stepper, int right_position_de
   right_position_degree = right_position_degree + right_position_degere;
   left_position_degree = left_position_degree + left_position_degere;
   motor_go_status = motor_speed;
-
-
   Serial.print("LEFT STEP: ");
   Serial.print(left_stepper_position);
   Serial.print(" | DEGRE: ");
@@ -332,7 +327,6 @@ void motors_posotions(int left_stepper, int right_stepper, int right_position_de
   Serial.print("MOTOR SPEED: ");
   Serial.print(motor_go_status);
   Serial.println("");
-
 }
 
 

@@ -7,14 +7,16 @@
 
 // WHEEL SENZORS FOR ROTATION CHECK
 bool stuck = false;
-  //FRONT LEFT
-  const int wheel_senzor_F_L = 7;
-  int F_L_state;
-  bool counting1 = true;
-  bool counting2 = true;
-  bool on_of;
-  
-  //
+
+
+//FRONT LEFT
+const int sensor = 7;
+unsigned long previousTime = 0;
+byte seconds;
+int state; // 0 close - 1 open wwitch
+int done_circle;
+int i;
+//
 
 
 
@@ -24,17 +26,23 @@ int num;
 bool controling = false;
 String text;
 String motor_values ;
+int count;
 
-  int count;
+
+unsigned long StartTime; 
 
 
 void setup() {
   Serial.begin(115200); /* begin serial comm. */
   Wire.begin(); /* join i2c bus as master */
-  pinMode(wheel_senzor_F_L, INPUT_PULLUP);
   Serial.println("I am I2C Master");
   Serial.println(num);
  // Wire.setClock(3400000);
+
+  // pinModes
+  pinMode(sensor, INPUT_PULLUP);
+
+
   
 }
 void check_for_command(){
@@ -46,36 +54,56 @@ void check_for_command(){
 
 
 void loop() {
-
-
-
-  
   check_for_command();
   if (controling == true){
-  motor_senzor_F_L();
   controls();
   }
+ motro();
+  if (millis() >= (previousTime)) {
+    previousTime = previousTime + 100;  // use 100000 for uS
+    seconds = seconds + 1;
+  }
+
+  
 }
 
 
+// Cehck if the Rover is stucked senzor
+void motro(){
+ byte old_time; 
 
-void motor_senzor_F_L(){
-  F_L_state = digitalRead(wheel_senzor_F_L);
-  
-  Serial.println(stuck ? "STUCK" : "GO");
-  Serial.println(on_of ? "1ON" : "1OFF");
-  Serial.println(count);
+  if (seconds > 15){
+       Serial.println("--------- ADDING SPEED ---------");
+      }
+  if (seconds > 60){
+       Serial.println("-------- RESET -------");
+         seconds = 0;
+      }
 
-  
-  if (F_L_state == HIGH ){
+      
+  state = digitalRead(sensor);
+  if (state == LOW){
+    if (i < 1){
+      done_circle = done_circle +1;
+      i =  + 1;
+      Serial.println(done_circle);
+      old_time = seconds;
+      seconds = 0;
+     
     }
-  
-  if ( F_L_state == LOW){ 
+  }
+   if (state == HIGH){
+      i = 0;
+      Serial.println(done_circle);
     }
+
+    Serial.print("Old Time : ");
+    Serial.println(old_time,DEC);
+    Serial.print("New Time : ");
+    Serial.println(seconds,DEC);
 }
 
-
-
+// CHECK FOR COMMAND 
 void commands(String str) {
   if (str.length() > 0) {
     if (str == "turn_left") {
@@ -124,7 +152,7 @@ void commands(String str) {
   }
 }
 
-
+// Controling
 void controls(){
   int xValue = analogRead(joyX); 
   int yValue = analogRead(joyY);
@@ -359,8 +387,8 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
       motor_values = motor_values + c;
       Serial.print(c);         // print the character
     }
-    Serial.println();
 
+    
     Serial.println();
     Serial.print("Values in STRING: ");         // print the character
     Serial.println(motor_values);
@@ -370,7 +398,6 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
     int number = firstThree.toInt();
     Serial.print("RIGHT STPPER VALUE: ");         // print the character
     Serial.println(number);
-
 
 
 
