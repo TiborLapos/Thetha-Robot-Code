@@ -5,22 +5,44 @@
 #define joyX A0
 #define joyY A1
 
+// WHEEL SENZORS FOR ROTATION CHECK
+bool stuck = false;
 
 
+//FRONT LEFT
+const int sensor = 7;
+unsigned long previousTime = 0;
+byte seconds;
+int state; // 0 close - 1 open wwitch
+int done_circle;
+int i;
+//
+
+
+
+//
 String str;
 int num;
 bool controling = false;
 String text;
 String motor_values ;
+int count;
+
+
+unsigned long StartTime; 
 
 
 void setup() {
-  num = num + 1;
   Serial.begin(115200); /* begin serial comm. */
   Wire.begin(); /* join i2c bus as master */
   Serial.println("I am I2C Master");
   Serial.println(num);
  // Wire.setClock(3400000);
+
+  // pinModes
+  pinMode(sensor, INPUT_PULLUP);
+
+
   
 }
 void check_for_command(){
@@ -36,16 +58,60 @@ void loop() {
   if (controling == true){
   controls();
   }
+ motro();
+  if (millis() >= (previousTime)) {
+    previousTime = previousTime + 100;  // use 100000 for uS
+    seconds = seconds + 1;
+  }
+
+  
 }
 
 
+// Cehck if the Rover is stucked senzor
+void motro(){
+  byte old_time; 
 
+  if (seconds > 15){
+       stuck = true;
+       
+      }
+  if (seconds > 60){
+       seconds = 0;
 
+      }
 
+      
+  state = digitalRead(sensor);
+  if (state == LOW){
+    if (i < 1){
+      done_circle = done_circle +1;
+      i =  + 1;
+      Serial.println(done_circle);
+      old_time = seconds;
+      seconds = 0;
+    }
+    stuck = false;
+    
+  }
+   if (state == HIGH){
+      i = 0;
+      
+      //Serial.println(done_circle);
+    }
+  /*
+    Serial.print("Old Time : ");
+    Serial.println(old_time,DEC);
+    Serial.print("New Time : ");
+    Serial.println(seconds,DEC);
+    */
+}
+
+// CHECK FOR COMMAND 
 void commands(String str) {
   if (str.length() > 0) {
     if (str == "turn_left") {
-      Serial.print("Dommand: " + text);
+      Serial.print("Command: " + text);
       Serial.println("Servo turn left ....");
       turn_left();
     }
@@ -90,30 +156,65 @@ void commands(String str) {
   }
 }
 
-
+// Controling
 void controls(){
   int xValue = analogRead(joyX); 
   int yValue = analogRead(joyY);
   Serial.print(xValue);
   Serial.print("\t");        
-  Serial.println(yValue);       
-  
-  if (xValue > 1000){go_front();} 
-  if (xValue < 10){go_back();}
-  if (xValue > 10 && xValue < 1000){go_stop();}
+  Serial.println(yValue); 
+        
+  if (xValue < 10 && stuck != false){
+    go_back_stuck();
+    Serial.println("---- BOOSTED SPEED ---- ");
+    }
+  if (xValue > 1000 && stuck != false){
+    go_front_stuck();
+    Serial.println("---- BOOSTED SPEED ---- ");
   }
+  if (xValue > 1000){
+    go_front();
+    Serial.println("NROMAL SPEED");
+    }
+    
+  if (xValue < 10){
+    go_back();
+    Serial.println("NROMAL SPEED");
+   }
+  if (xValue > 10 && xValue < 1000){
+    go_stop();
+    }
+  
+}
+
+
+
 
 void go_stop() {
   going_speed(0, 0, 0, 0, 0);
 }
 
 void go_front() {
-  going_speed(1, 38, 38,38,38);
+  going_speed(1, 40, 40, 40, 40);
+  
 }
+
+
+void go_front_stuck(){
+  for (int i = 0; i < 100; i++){
+     going_speed(1, i, i, i, i);
+    }
+}
+
 
 void go_back() {
   going_speed(-1, 40, 40, 40, 40);
 }
+
+void go_back_stuck(){
+ going_speed(-1, 100, 100, 100, 100);
+}
+
 
 void motor_stop(){
   Wire.beginTransmission(9);
@@ -285,8 +386,8 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
       motor_values = motor_values + c;
       Serial.print(c);         // print the character
     }
-    Serial.println();
 
+    
     Serial.println();
     Serial.print("Values in STRING: ");         // print the character
     Serial.println(motor_values);
@@ -296,7 +397,6 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
     int number = firstThree.toInt();
     Serial.print("RIGHT STPPER VALUE: ");         // print the character
     Serial.println(number);
-
 
 
 
