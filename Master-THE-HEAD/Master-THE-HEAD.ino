@@ -2,8 +2,7 @@
 
 #include   <Wire.h>
 
-#define joyX A0
-#define joyY A1
+
 
 // WHEEL SENZORS FOR ROTATION CHECK
 bool stuck = false;
@@ -23,20 +22,24 @@ int i;
 //
 String str;
 int num;
-bool controling = false;
 String text;
 String motor_values ;
 int count;
 
+//
+int dir;
+int number;
+bool controling = false;
 
 unsigned long StartTime; 
 
 
 void setup() {
   Serial.begin(115200); /* begin serial comm. */
-  Wire.begin(); /* join i2c bus as master */
+  Wire.begin(0xA);
+  Wire.onReceive(check_for_command);
+
   Serial.println("I am I2C Master");
-  Serial.println(num);
  // Wire.setClock(3400000);
 
   // pinModes
@@ -46,70 +49,44 @@ void setup() {
   
 }
 void check_for_command(){
-  if (Serial.available() > 0) {
-    str = Serial.readStringUntil('\n');
-    commands(str);
+   while (Wire.available()) { // loop through all but the last
+    number = Wire.read();
+    Serial.print("data received:");
+    if (controling == true){
+          controls(number);
+      }else{
+        commands(number);
+        Serial.println(number);
+        }
+
   }
 }
+
+
 
 
 void loop() {
   check_for_command();
-  if (controling == true){
-  controls();
-  }
- motro();
-  if (millis() >= (previousTime)) {
-    previousTime = previousTime + 100;  // use 100000 for uS
-    seconds = seconds + 1;
-  }
 
-  
-}
-
-
-// Cehck if the Rover is stucked senzor
-void motro(){
-  byte old_time; 
-
-  if (seconds > 15){
-       stuck = true;
-       
-      }
-  if (seconds > 60){
-       seconds = 0;
-
-      }
-
-      
-  state = digitalRead(sensor);
-  if (state == LOW){
-    if (i < 1){
-      done_circle = done_circle +1;
-      i =  + 1;
-      Serial.println(done_circle);
-      old_time = seconds;
-      seconds = 0;
-    }
-    stuck = false;
-    
-  }
-   if (state == HIGH){
-      i = 0;
-      
-      //Serial.println(done_circle);
-    }
-  /*
-    Serial.print("Old Time : ");
-    Serial.println(old_time,DEC);
-    Serial.print("New Time : ");
-    Serial.println(seconds,DEC);
-    */
 }
 
 // CHECK FOR COMMAND 
-void commands(String str) {
-  if (str.length() > 0) {
+void commands(int str) {
+  Serial.println(str);
+  if (str == 0){
+    Serial.println("test");
+    }
+  if (str == 5) {
+    Wire.beginTransmission(9);
+    Wire.write("motor_go");
+    Wire.endTransmission();
+    controling = true;
+  }
+
+
+  /*
+    Serial.println(str);
+    
     if (str == "turn_left") {
       Serial.print("Command: " + text);
       Serial.println("Servo turn left ....");
@@ -137,7 +114,7 @@ void commands(String str) {
       Serial.print("Command: " + text);
       check_motors_back_0X09();
     }
-    if (str == "control") {
+    if (str == 5) {
      Serial.print("Command: " + text);
      Wire.beginTransmission(9);
      Wire.write("motor_go");
@@ -146,45 +123,24 @@ void commands(String str) {
      Wire.write("motor_go");
      Wire.endTransmission();
      controling = true;
-   
     }
-    if (str == "stop") {
+    if (str == 0) {
      Serial.print("Command " + text);
      controling = false;
      motor_stop();
     }
-  }
+    */
 }
 
 // Controling
-void controls(){
-  int xValue = analogRead(joyX); 
-  int yValue = analogRead(joyY);
-  Serial.print(xValue);
-  Serial.print("\t");        
-  Serial.println(yValue); 
-        
-  if (xValue < 10 && stuck != false){
-    go_back_stuck();
-    Serial.println("---- BOOSTED SPEED ---- ");
-    }
-  if (xValue > 1000 && stuck != false){
-    go_front_stuck();
-    Serial.println("---- BOOSTED SPEED ---- ");
-  }
-  if (xValue > 1000){
+void controls(int mov_dir){
+  while(mov_dir == 1){
+    Serial.println("Front");
     go_front();
-    Serial.println("NROMAL SPEED");
-    }
     
-  if (xValue < 10){
-    go_back();
-    Serial.println("NROMAL SPEED");
-   }
-  if (xValue > 10 && xValue < 1000){
-    go_stop();
     }
   
+    
 }
 
 
@@ -199,12 +155,6 @@ void go_front() {
   
 }
 
-
-void go_front_stuck(){
-  for (int i = 0; i < 100; i++){
-     going_speed(1, i, i, i, i);
-    }
-}
 
 
 void go_back() {

@@ -25,6 +25,7 @@ int motor_go_status;
 
 //
 bool go_go = false;
+int way = 0;
 //
 
 //Motor 1
@@ -38,6 +39,7 @@ int LM_LPWM = 12;
 int LM_L_EN = 5;
 int LM_R_EN = 6;
 
+int text;
 void setPWMfrequency(int freq) {
   TCCR1B = TCCR2B & 0b11111000 | freq ;
   TCCR3B = TCCR2B & 0b11111000 | freq ;
@@ -140,51 +142,50 @@ void setup() {
 
 
 void receiveString() { //Recive data from MASTER
-  String text = "";
   while (Wire.available()) {
-    char c = Wire.read(); // receive a byte as character
-    text += c;
+    int c = Wire.read(); // receive a byte as character
+    text = c;
   }
   commands(text);
-  values = text;
 }
 
 void loop() {
   if (go_go == true) {
-    motor_check(values);
+    motor_check(text);
   }
 
 }
 
 
 
-void commands(String cmd) { //RUN Recived code
-  if (cmd == "ON") {
+
+void commands(int cmd) { //RUN Recived code
+  if (cmd == 5) {
     Wire.onRequest(turn_on); /* register request event */
     turn_on();
   }
-  else if (cmd == "OFF") {
+  else if (cmd == 5) {
     Wire.onRequest(turn_off); /* register request event */
     turn_off();
   }
-  else if (cmd == "front_turn_left") {
+  else if (cmd == 5) {
     Wire.onRequest(front_turn_left); /* register request event */
     front_turn_left();
   }
-  else if (cmd == "front_turn_default") {
+  else if (cmd == 5) {
     Wire.onRequest(front_turn_default); /* register request event */
     front_turn_default();
   }
-  else if (cmd == "front_turn_right") {
+  else if (cmd == 5) {
     Wire.onRequest(front_turn_right); /* register request event */
     front_turn_right();
-  } else if (cmd == "motor_status") {
-    Wire.onRequest(motors_status); /* register request event */
-    motors_status();
-  } else if (cmd == "motor_go") {
+  } else if (cmd == 5) {
+    //Wire.onRequest(motors_status); /* register request event */
+    //motors_status();
+  } else if (cmd == 1) {
     go_go = true;
   }
-  else if (cmd == "motor_stop") {
+  else if (cmd == 5) {
     go_go = false;
   }
   else {
@@ -200,14 +201,14 @@ void commands(String cmd) { //RUN Recived code
 
 void motor_go_front(int F_L, int F_R) {
   Serial.println("FRONT");
-  setMotor1('R', F_L);
-  setMotor2('L', F_R);
+  setMotor1('L', F_L);
+  setMotor2('R', F_R);
 }
 
 void motor_go_back(int B_L, int B_R) {
   Serial.println("BACK");
-  setMotor1('L', B_L);
-  setMotor2('R', B_R);
+  setMotor1('R', B_L);
+  setMotor2('L', B_R);
 }
 
 void motor_go_stop() {
@@ -235,7 +236,7 @@ void motor_go_right(int i) {
 }
 
 
-
+/*
 void motors_status() {
   char buffer[26];
   sprintf(buffer, "%04d%04d%04d%04d%04d", right_stepper_position, left_stepper_position, right_position_degree, left_position_degree, motor_go_status);
@@ -243,57 +244,29 @@ void motors_status() {
   Wire.write(buffer);
 }
 
+*/
 
+void motor_check(int values) {
+  int m_speed = 60;
+  int number_back1= m_speed;
+  int number_back2 = m_speed;
+  way = values;
 
-void motor_check(String values) {
-  Serial.print("Checking motors: ");
-  Serial.print(values);
-  Serial.println();
-
-  Serial.print("Values in STRING: ");
-  Serial.print(values);
-  Serial.println();
-
-  String status_way = values.substring(0, 2);
-  int way = status_way.toInt();
-  Serial.print("What to do : ");
-  Serial.print(way);
-  Serial.println();
-
-  String front_values1 = values.substring(2, 6);
-  int number_front1 = front_values1.toInt();
-  Serial.print("Front Left value: ");
-  Serial.print(number_front1);
-  Serial.println();
-
-  String front_values2 = values.substring(6, 10);
-  int number_front2 = front_values2.toInt();
-  Serial.print("Front Right value: ");
-  Serial.print(number_front2);
-  Serial.println();
-
-  String back_values1 = values.substring(10, 14);
-  int number_back1 = back_values1.toInt();
-  Serial.print("Back Left value: ");
-  Serial.print(number_back1);
-  Serial.println();
-
-  String back_values2 = values.substring(14, 18);
-  int number_back2 = back_values2.toInt();
-  Serial.print("Back Right value: ");
-  Serial.print(number_back2);
-  Serial.println();
-
-
-  if (way == 1) {
-    motor_go_front(number_front1, number_front2);
+ if (way == 1) {
+    motor_go_front(number_back1 , number_back2 );
   }
-  if (way == -1) {
-    motor_go_back(number_front1, number_front2);
+  else if (way == 2) {
+    motor_go_back(number_back1 , number_back2 );
   }
-  if (way == 0) {
-    motor_go_stop();
-  }
+  else if (way == 3){
+    front_turn_right();
+    }
+  else if (way == 4){
+    front_turn_left();
+    }
+  else{
+      motor_go_stop();
+    }
   Serial.println("-------------------------------------");
 
 }
@@ -408,8 +381,8 @@ void front_turn_right() {
   if (right_stepper_position < 250 || right_position_degree < 90 && left_stepper_position < 250 || left_position_degree < 90) {
     //Steper -- Turning RIGH
     turn_on();
-    digitalWrite(DirPin1, LOW);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, LOW);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin1, HIGH);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin2, HIGH);   // <-- MOTOR POSITION TURNING
     motor_go_right(35);
     for ( x = 0; x <=  SPR; x++) {
       Serial.print(a);
@@ -442,8 +415,8 @@ void front_turn_left() {
   if (right_stepper_position > -250 || right_position_degree > -90 && left_stepper_position > -250 || left_position_degree > -90) {
     turn_on();
     //Steper -- Turning LEFT
-    digitalWrite(DirPin1, HIGH);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, HIGH);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin1, LOW);   // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin2, LOW);   // <-- MOTOR POSITION TURNING
     motor_go_left(35);
     for ( x = 0; x <=  SPR; x++) {
       Serial.print(a);
