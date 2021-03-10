@@ -168,11 +168,7 @@ void commands(int cmd) {          //RUN Recived code
     turn_on();
   }
 
-  else if (cmd == 5) {
-    Wire.onRequest(turn_off);     //register request event 
-    turn_off();
-  }
-
+ 
   else if (cmd == 5) {
     Wire.onRequest(front_turn_left); /* register request event */
     front_turn_left();
@@ -278,10 +274,6 @@ void motor_check(int values) {
   else{
       motor_go_stop();
     }
-  
- 
-  
-  
   Serial.println("-------------------------------------");
 }
 
@@ -296,7 +288,7 @@ void motor_check(int values) {
 
 
 
-//STEPPER MOTORS FRONT
+/* STEPPER MOTORS FRONT */
 void motors_posotions(int left_stepper, int right_stepper, int right_position_degere, int left_position_degere, int motor_speed) {
   right_stepper_position = right_stepper_position + left_stepper;
   left_stepper_position = left_stepper_position + right_stepper;
@@ -330,7 +322,7 @@ void front_turn_default() {
   //Wire.write("Motor was turned default");    // <-- Send string on request 
   //Serial.println("Tuning default ....");
 
-  /*  CHECK IFF THE MOTOR IS ON RIGHT SID OR ON LEFT  */
+  /*  CHECK IFF THE MOTOR IS ON RIGHT SIDE OR ON LEFT  */
   if (right_stepper_position > 0) {
     /*  LEFT Steper -- Turning DEFAULT  */
     int a = right_stepper_position / SPR;

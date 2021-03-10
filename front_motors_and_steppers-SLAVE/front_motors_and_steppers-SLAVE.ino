@@ -40,6 +40,7 @@ int LM_L_EN = 5;
 int LM_R_EN = 6;
 
 int text;
+
 void setPWMfrequency(int freq) {
   TCCR1B = TCCR2B & 0b11111000 | freq ;
   TCCR3B = TCCR2B & 0b11111000 | freq ;
@@ -153,7 +154,6 @@ void loop() {
   if (go_go == true) {
     motor_check(text);
   }
-
 }
 
 
@@ -282,15 +282,13 @@ void motor_check(int values) {
 
 
 
-//STEPPER MOTORS FRONT
+/* STEPPER MOTORS FRONT */
 void motors_posotions(int left_stepper, int right_stepper, int right_position_degere, int left_position_degere, int motor_speed) {
   right_stepper_position = right_stepper_position + left_stepper;
   left_stepper_position = left_stepper_position + right_stepper;
   right_position_degree = right_position_degree + right_position_degere;
   left_position_degree = left_position_degree + left_position_degere;
   motor_go_status = motor_speed;
-
-
   Serial.print("LEFT STEP: ");
   Serial.print(left_stepper_position);
   Serial.print(" | DEGRE: ");
@@ -304,7 +302,6 @@ void motors_posotions(int left_stepper, int right_stepper, int right_position_de
   Serial.print("MOTOR SPEED: ");
   Serial.print(motor_go_status);
   Serial.println("");
-
 }
 
 
@@ -313,20 +310,20 @@ void motors_posotions(int left_stepper, int right_stepper, int right_position_de
 
 
 
-//   TURN THE ALL FRONT MOTOR TO DEFAULT POSITION
+/*   TURN THE ALL FRONT MOTOR TO DEFAULT POSITION */
 void front_turn_default() {
-  const int SPR = 50;    // Steps per revolution
-  Wire.write("Motor was turned default");  /*send string on request */
-  Serial.println("Tuning default ....");
+  const int SPR = 200;                           // <-- Steps per revolution
+  //Wire.write("Motor was turned default");      // <-- Send string on request 
+  //Serial.println("Tuning default ....");
 
-  //CHECK IFF THE MOTOR IS ON RIGHT SID OR ON LEFT
+  /*  CHECK IFF THE MOTOR IS ON RIGHT SIDE OR ON LEFT  */
   if (right_stepper_position > 0) {
-    //Steper -- Turning LEFT
+    /*  LEFT Steper -- Turning DEFAULT  */
     int a = right_stepper_position / SPR;
     Serial.println(a);
-    digitalWrite(DirPin1, HIGH);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, HIGH);   // <-- MOTOR POSITION TURNING
-    motor_go_left(35);
+    digitalWrite(DirPin1, HIGH);              // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin2, HIGH);              // <-- MOTOR POSITION TURNING
+    motor_go_left(55);                        // <-- DC Motor Direction + Speed
     for (a > 0; a--;) {
       for ( x = 0; x <=  SPR; x++) {
         Serial.print(a);
@@ -334,23 +331,21 @@ void front_turn_default() {
         Serial.println(x);
         digitalWrite(StepPin1, HIGH);
         digitalWrite(StepPin2, HIGH);
-        delayMicroseconds(5000); //5000
         digitalWrite(StepPin1, LOW);
         digitalWrite(StepPin2, LOW);
-        delayMicroseconds(15000); //15000
+        delayMicroseconds(1024);              // <-- Motor ON/OFF Frequency
       }
-
-      motors_posotions(-SPR, -SPR, -18, -18, 0);
+      motors_posotions(-SPR, -SPR, -2000, -2000, 0);
     }
   }
   motor_go_stop();
   if (left_stepper_position < 0) {
-    //Steper -- Turning RIGHT
+    /*  RIGHT Steper -- Turning DEFAULT */
     int a = right_stepper_position / SPR;
-    Serial.println(a);
-    digitalWrite(DirPin1, LOW);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, LOW);   // <-- MOTOR POSITION TURNING
-    motor_go_right(35);
+    //Serial.println(a);
+    digitalWrite(DirPin1, LOW);           // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin2, LOW);           // <-- MOTOR POSITION TURNING
+    motor_go_right(55);                   // <-- DC Motor Direction + Speed
     for (a < 0; a++;) {
       for ( x = 0; x <=  SPR; x++) {
         Serial.print(a);
@@ -358,65 +353,51 @@ void front_turn_default() {
         Serial.println(x);
         digitalWrite(StepPin1, HIGH);
         digitalWrite(StepPin2, HIGH);
-        delayMicroseconds(5000); //5000
         digitalWrite(StepPin1, LOW);
         digitalWrite(StepPin2, LOW);
-        delayMicroseconds(15000); //15000
+        delayMicroseconds(1024);          // <-- Motor ON/OFF Frequency
       }
-
-      motors_posotions(+SPR, +SPR, +18, +18, 0);
+      motors_posotions(+SPR, +SPR, +2000, +2000, 0);
     }
   }
   motor_go_stop();
-
-
-
-
 }
 
-//   TURN THE ALL FRONT MOTOR TO RIGHT
+/*      TURN THE ALL FRONT MOTOR TO RIGHT     */
 void front_turn_right() {
-  const int SPR = 50;    // Steps per revolution
+  const int SPR = 200;    // Steps per revolution
   Serial.println("Tuning RIGHT ....");
-  if (right_stepper_position < 250 || right_position_degree < 90 && left_stepper_position < 250 || left_position_degree < 90) {
-    //Steper -- Turning RIGH
-    turn_on();
-    digitalWrite(DirPin1, HIGH);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, HIGH);   // <-- MOTOR POSITION TURNING
-    motor_go_right(35);
+  if (right_stepper_position < 2000 && left_stepper_position < 2000) {
+    /*  Back Steper -- Turning RIGH  */
+    digitalWrite(DirPin1, HIGH);   // <-- MOTOR POSITION TURNING DIRECTION
+    digitalWrite(DirPin2, HIGH);   // <-- MOTOR POSITION TURNING DIRECTION
+    motor_go_right(55);            // <-- DC Motor Direction + Speed
     for ( x = 0; x <=  SPR; x++) {
       Serial.print(a);
       Serial.print(" | ");
       Serial.println(x);
       digitalWrite(StepPin1, HIGH);
       digitalWrite(StepPin2, HIGH);
-      delayMicroseconds(5000); //5000
       digitalWrite(StepPin1, LOW);
       digitalWrite(StepPin2, LOW);
-      delayMicroseconds(15000); //15000
+      delayMicroseconds(1024);     // <-- Motor ON/OFF Frequency
     }
-    motors_posotions(SPR, SPR, 18, 18, 0);
+    motors_posotions(SPR, SPR, 2000, 2000, 0);
     delay(100);
-    turn_off();
     motor_go_stop();
   } else {
-    turn_off();
     Serial.println("Can not turn to RIGHT !");
   }
-
-
-
-
 }
-//    TURN THE ALL FRONT MOTOR TO LEFT
+
+/*    TURN THE ALL FRONT MOTOR TO LEFT    */
 void front_turn_left() {
   const int SPR = 50 ;    // Steps per revolution
   Serial.println("Tuning LEFT ....");
-  if (right_stepper_position > -250 || right_position_degree > -90 && left_stepper_position > -250 || left_position_degree > -90) {
-    turn_on();
-    //Steper -- Turning LEFT
-    digitalWrite(DirPin1, LOW);   // <-- MOTOR POSITION TURNING
-    digitalWrite(DirPin2, LOW);   // <-- MOTOR POSITION TURNING
+  if (right_stepper_position > -2000 && left_stepper_position > -2000) {
+    /* Steper -- Turning LEFT */
+    digitalWrite(DirPin1, LOW);       // <-- MOTOR POSITION TURNING
+    digitalWrite(DirPin2, LOW);       // <-- MOTOR POSITION TURNING
     motor_go_left(35);
     for ( x = 0; x <=  SPR; x++) {
       Serial.print(a);
@@ -424,16 +405,14 @@ void front_turn_left() {
       Serial.println(x);
       digitalWrite(StepPin1, HIGH);
       digitalWrite(StepPin2, HIGH);
-      delayMicroseconds(5000); //5000
       digitalWrite(StepPin1, LOW);
       digitalWrite(StepPin2, LOW);
-      delayMicroseconds(15000); //15000
+      delayMicroseconds(1024);        // <-- Motor ON/OFF Frequency
     }
     delay(100);
-    Wire.write("Motor was turned right");  /*send string on request */
-    turn_off();
+    //Wire.write("Motor was turned right");  /*send string on request */
     motor_go_stop();
-    motors_posotions(-SPR, -SPR, -18, -18, 0);
+    motors_posotions(-SPR, -SPR, -2000, -2000, 0);
   } else {
     turn_off();
     Serial.println("Can not turn to left");
