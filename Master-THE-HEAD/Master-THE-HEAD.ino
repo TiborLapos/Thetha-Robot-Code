@@ -1,41 +1,34 @@
 //developing brench
-
 #include   <Wire.h>
 
-
-
-// WHEEL SENZORS FOR ROTATION CHECK
+/* WHEEL SENZORS FOR ROTATION CHECK */
 bool stuck = false;
 
 
-//FRONT LEFT
+/*  FRONT LEFT */
 const int sensor = 7;
 unsigned long previousTime = 0;
 byte seconds;
-int state; // 0 close - 1 open wwitch
+int state;     // 0 close - 1 open wwitch
 int done_circle;
 int i;
-//
 
 
-
-//
 String str;
 int num;
 String text;
 String motor_values ;
 int count;
 
-//
+
 int dir;
 int number;
 bool controling = false;
-
 unsigned long StartTime; 
 
 
 void setup() {
-  Serial.begin(115200); /* begin serial comm. */
+  Serial.begin(115200); // begin serial comm. 
   Wire.begin(0xA);
   Wire.onReceive(check_for_command);
 
@@ -137,13 +130,8 @@ void controls(int mov_dir){
   while(mov_dir == 1){
     Serial.println("Front");
     go_front();
-    
     }
-  
-    
 }
-
-
 
 
 void go_stop() {
@@ -152,9 +140,7 @@ void go_stop() {
 
 void go_front() {
   going_speed(1, 40, 40, 40, 40);
-  
 }
-
 
 
 void go_back() {
@@ -186,11 +172,6 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
   Wire.write(buffer);
   Wire.endTransmission();
 }
-
-
-
-
-
 
 
   void turn_default() {
@@ -228,32 +209,6 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
     check_motors_front_0X08();
     check_motors_back_0X09();
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   void check_motors_back_0X09() {
@@ -385,5 +340,4 @@ void going_speed(int stat, int fl, int fr, int bl, int br) {
     else {
       Serial.println("Can turn to LEFT");
     }
-
 }
