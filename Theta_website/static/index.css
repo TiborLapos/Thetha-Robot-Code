@@ -1,0 +1,27 @@
+body{
+    background-color: rgb(18,25,32);
+    font-family: 'Jost', sans-serif;
+    margin: 0;
+}
+
+.nadpis{
+    color: white;
+    text-align: center;
+    font-size: 28px;
+}
+
+.nadpis h1{
+    margin-top: 0;
+}
+.vrch{
+        height: 100vh;
+}
+.prenos{
+    margin: auto;
+    width: 50%;
+}
+.kordinate{
+    color: white;
+    width: 100%;
+    text-align: center;
+}

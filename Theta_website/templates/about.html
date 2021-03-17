@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>About Flask</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  </head>
+  <body>
+
+    {% extends "template.html" %}
+    {% block content %}
+    <script>
+      $(document).ready(function(){
+      setInterval(function(){
+            $("#here").load(window.location.href + " #here" );
+      }, 1000);
+      });
+    </script>
+
+    <div id="here"><h1> {{ test }}</h1></div>
+
+    {% endblock %}
+  </body>
+</html>
+

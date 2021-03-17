@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Control panel</title>
+        <link rel="stylesheet" href="./static/index.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300&display=swap" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="vrch">
+            <div class="nadpis">
+                <h1>Control panel</h1>
+            </div>
+            <div class="prenos" >
+                <img src="http://192.168.1.13:2204/video_feed" style="width: 950px; height: 650px;">
+            </div>
+              <div id="kordinate" class="kordinate" >
+                <a>X: {{ x }}</a>
+                <a>Y: {{ y }}</a>
+            </div>
+            <script>
+              $(document).ready(function(){
+              setInterval(function(){
+                    $("#kordinate").load(window.location.href + " #kordinate" );
+              }, 1000);
+              });
+            </script>
+        </div>
+
+    </body>
+</html>
